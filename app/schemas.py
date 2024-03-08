@@ -1,5 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
+
 
 
 class PostBase(BaseModel):
@@ -15,6 +17,7 @@ class PostCreate(PostBase):
 class Post(PostBase):
     id: int
     created_at: datetime
+    #owner_id: int
 
     class Config:
         orm_mode = True
@@ -28,6 +31,22 @@ class UserOut(BaseModel):
     id: int
     email: EmailStr
     created_at: datetime
+    #owner_id: int
     
     class Config:
         orm_mode = True
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    
+class TokenData(BaseModel):
+    id: Optional[str] = None
+    model_config = ConfigDict(coerce_numbers_to_str=True)
+
+# class UserInDB(UserCreate):
+#     hashed_password: str
