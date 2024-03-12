@@ -2,6 +2,8 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
 
+from pydantic.types import conint
+
 
 
 class PostBase(BaseModel):
@@ -31,6 +33,13 @@ class Post(PostBase):
     class Config:
         orm_mode = True
 
+class PostOut(BaseModel):
+    Post: Post
+    votes: int
+    
+    class Config:
+        orm_mode = True
+        
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -49,5 +58,6 @@ class TokenData(BaseModel):
     id: Optional[str] = None
     model_config = ConfigDict(coerce_numbers_to_str=True)
 
-# class UserInDB(UserCreate):
-#     hashed_password: str
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1)
